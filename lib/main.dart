@@ -69,11 +69,18 @@ class _kalendUIState extends State<kalendUI> {
           ),
         ),
 
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Colors.blue,
+          tooltip: 'Tambah Event',
+
+
           onPressed: () {
             // untuk nambah event tanggal
           },
-          child: const Icon(Icons.add),
+          icon: const Icon(Icons.add, color: Colors.white,),
+          label: const Text('Tambah Event'), 
+          splashColor: Colors.white,
+          foregroundColor: Colors.white,
         ),
       ),
     );
