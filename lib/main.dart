@@ -35,8 +35,15 @@ class _kalendUIState extends State<kalendUI> {
             padding: EdgeInsets.all(16.0),
 
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+
+
+              
               children: [
+
+                Text('Hari ini: ${nowadays.day}/${nowadays.month}/${nowadays.year}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300,),),
+                SizedBox(height: 16.0,),
+
                 Expanded(
                   child: TableCalendar(
                     focusedDay: nowadays,
@@ -58,6 +65,17 @@ class _kalendUIState extends State<kalendUI> {
                       });
                     },
 
+                    calendarStyle: CalendarStyle(
+                      todayDecoration: BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                      selectedDecoration: BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+
                     headerStyle: HeaderStyle(
                       formatButtonVisible: false,
                       titleCentered: true,
@@ -73,12 +91,11 @@ class _kalendUIState extends State<kalendUI> {
           backgroundColor: Colors.blue,
           tooltip: 'Tambah Event',
 
-
           onPressed: () {
             // untuk nambah event tanggal
           },
-          icon: const Icon(Icons.add, color: Colors.white,),
-          label: const Text('Tambah Event'), 
+          icon: const Icon(Icons.add, color: Colors.white),
+          label: const Text('Tambah Event'),
           splashColor: Colors.white,
           foregroundColor: Colors.white,
         ),
