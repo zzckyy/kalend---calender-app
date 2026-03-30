@@ -2,104 +2,148 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 void main() {
-  runApp(const kalendUI());
+  runApp(kalendUI());
 }
 
-class kalendUI extends StatefulWidget {
-  const kalendUI({super.key});
-
-  @override
-  State<kalendUI> createState() => _kalendUIState();
-}
-
-class _kalendUIState extends State<kalendUI> {
-  DateTime nowadays = DateTime.now();
-  DateTime? _selectedDay;
-
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-
+class kalendUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Kalend',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      home: CalendarPage(),
+    );
+  }
+}
 
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        // appBar: AppBar(
-        //   // title: const Text('Kalend'),
-        // ),
-        body: Center(
-          child: Container(
-            padding: EdgeInsets.all(16.0),
+class CalendarPage extends StatefulWidget {
+  @override
+  _CalendarPageState createState() => _CalendarPageState();
+}
 
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+class _CalendarPageState extends State<CalendarPage> {
+  DateTime _today = DateTime.now();
+  DateTime today = DateTime.now();
+  DateTime focusedDay = DateTime.now();
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 36, 36, 36),
 
-              
-              children: [
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
 
-                Text('Hari ini: ${nowadays.day}/${nowadays.month}/${nowadays.year}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300,),),
-                SizedBox(height: 16.0,),
+              Center(
+                child: Text(
+                  "Hari ini: ${_today.toString().split(" ")[0]}",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ),
 
-                Expanded(
-                  child: TableCalendar(
-                    focusedDay: nowadays,
-                    firstDay: DateTime(2000),
-                    lastDay: DateTime(2100),
-                    calendarFormat: _calendarFormat,
-                    onFormatChanged: (format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    },
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                    },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        nowadays = focusedDay;
-                      });
-                    },
+              SizedBox(height: 20),
 
-                    calendarStyle: CalendarStyle(
-                      todayDecoration: BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                      selectedDecoration: BoxDecoration(
-                        color: Colors.orange,
-                        shape: BoxShape.circle,
-                      ),
+              // 🔹 CALENDAR
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 14, 14, 14),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(8, 8),
                     ),
+                  ],
+                ),
+                padding: EdgeInsets.all(10),
+                child: TableCalendar(
+                  focusedDay: focusedDay,
+                  firstDay: DateTime(2020),
+                  lastDay: DateTime(2030),
 
-                    headerStyle: HeaderStyle(
-                      formatButtonVisible: false,
-                      titleCentered: true,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(today, day);
+                  },
+
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      today = selectedDay;
+                      this.focusedDay = focusedDay;
+                    });
+                  },
+
+                  calendarStyle: CalendarStyle(
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.greenAccent,
+                      shape: BoxShape.circle,
                     ),
+                    todayDecoration: BoxDecoration(
+                      color: Colors.white24,
+                      shape: BoxShape.circle,
+                    ),
+                    defaultTextStyle: TextStyle(color: Colors.white),
+                    weekendTextStyle: TextStyle(color: Colors.redAccent),
+                  ),
+
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                    titleTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                    leftChevronIcon:
+                        Icon(Icons.chevron_left, color: Colors.white),
+                    rightChevronIcon:
+                        Icon(Icons.chevron_right, color: Colors.white),
+                  ),
+
+                  daysOfWeekStyle: DaysOfWeekStyle(
+                    weekdayStyle: TextStyle(color: Colors.grey),
+                    weekendStyle: TextStyle(color: Colors.redAccent),
                   ),
                 ),
-              ],
-            ),
+              ),
+
+              SizedBox(height: 20),
+
+              // 🔹 INFO SELECTED DATE
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "Selected: ${today.toString().split(" ")[0]}",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
-
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.blue,
-          tooltip: 'Tambah Event',
-
-          onPressed: () {
-            // untuk nambah event tanggal
-          },
-          icon: const Icon(Icons.add, color: Colors.white),
-          label: const Text('Tambah Event'),
-          splashColor: Colors.white,
-          foregroundColor: Colors.white,
-        ),
       ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            today = DateTime.now();
+            focusedDay = DateTime.now();
+          });
+        },
+        child: Icon(Icons.calendar_today_rounded),
+        backgroundColor: Colors.greenAccent,
+        foregroundColor: Colors.white,
+      ),
+
     );
   }
 }
